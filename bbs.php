@@ -58,7 +58,8 @@
   <main role="main" class="container" style="padding:60px 15px 0">
     <div>
       <h1>掲示板</h1>
-      <form action="write.php" method="post" onsubmit="return validate(this)">
+      <!-- <form action="write.php" method="post" onsubmit="return validate(this)"> -->
+      <form id="postform" action="write.php" method="post">
         <div class="form-group">
           <label>タイトル</label>
           <input type="text" name="title" class="form-control">
@@ -164,15 +165,41 @@ function validate(form) {
     return false;
   }
 }
-function validateName(field) {
-  return (field == '') ? '名前が入力されていません。\n' : ''
-}
-function validateBody(field) {
-  return (field == '') ? '本文が入力されていません。\n' : ''
-}
-function validatePass(field) {
-  if (field == '') return '削除パスワードが設定されていません。\n'
-  if (field.length != 4)
+
+document.addEventListener('DOMContentLoaded', function() {
+  // console.log(formTags);
+  // console.log(document.querySelector('#postform'));
+  // console.log(document.getElementById('postform'));
+  document.getElementById('postform').addEventListener('submit', function(event) {
+    // フォームの要素を取得
+    const name = this.name.value;
+    const body = this.body.value;
+    const pass = this.pass.value;
+    
+    fail = validateName(name)
+    // console.log(fail)
+    
+    fail += validateBody(body)
+    // console.log(fail)
+    
+    fail += validatePass(pass)
+    // console.log(fail)
+    
+    if (fail){
+      alert(fail); 
+      event.preventDefault();
+    }
+  });
+  
+  function validateName(field) {
+    return (field == '') ? '名前が入力されていません。\n' : ''
+  }
+  function validateBody(field) {
+    return (field == '') ? '本文が入力されていません。\n' : ''
+  }
+  function validatePass(field) {
+    if (field == '') return '削除パスワードが設定されていません。\n'
+    if (field.length != 4)
     return '削除パスワードが4文字になっていません。\n'
   else {
     const regex = new RegExp('^[0-9]{4}$');
@@ -182,6 +209,30 @@ function validatePass(field) {
     return '';
   }
 }
+
+const formTags = document.querySelectorAll('.delete');
+formTags.forEach(function (item, index) {
+      item.onsubmit = function (event) {
+        event.preventDefault();
+        const id = this.id.value;
+        const pass = this.pass.value;
+        const token = this.token.value;
+        // console.log(id, pass);
+
+        fail = validatePass(pass);
+        if (fail != '') {
+          alert(fail);
+        }
+        else {
+          const del = confirm("本当にに削除しますか？");
+          if (del == true) {
+            deletedb(id, pass, token);
+          }
+        }
+      }
+  });
+});
+
 
 // $(function(){
 //   $('.delete').submit(function(e) {
@@ -227,28 +278,7 @@ function validatePass(field) {
 // });
 
 
-const formTags = document.querySelectorAll('.delete');
 
-formTags.forEach(function (item, index) {
-    item.onsubmit = function (event) {
-      event.preventDefault();
-      const id = this.id.value;
-      const pass = this.pass.value;
-      const token = this.token.value;
-      // console.log(id, pass);
-
-      fail = validatePass(pass);
-      if (fail != '') {
-        alert(fail);
-      }
-      else {
-        const del = confirm("本当にに削除しますか？");
-        if (del == true) {
-          deletedb(id, pass, token);
-        }
-      }
-    }
-});
 
 
 function deletedb(id, pass, token) {
