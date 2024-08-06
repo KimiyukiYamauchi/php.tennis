@@ -34,7 +34,7 @@ try {
     $pass = '1234'; // 固定の4桁のパスワード
 
     // データを挿入するためのSQLクエリ
-    $sql = "INSERT INTO bbs (name, title, body, pass) VALUES (:name, :title, :body, :pass)";
+    $sql = "INSERT INTO bbs (name, title, body, pass, date) VALUES (:name, :title, :body, :pass, now())";
     $stmt = $pdo->prepare($sql);
 
     // トランザクションを開始
