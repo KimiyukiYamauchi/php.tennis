@@ -191,15 +191,39 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
-  function validateName(field) {
+
+  const deleteButtons = document.querySelectorAll('.delete');
+  deleteButtons.forEach(function (item, index) {
+    item.addEventListener('submit', function(event) {
+      event.preventDefault();
+      const id = this.id.value;
+      const pass = this.pass.value;
+      const token = this.token.value;
+
+      fail = validatePass(pass);
+      if (fail != '') {
+        alert(fail);
+      }
+      else {
+        const del = confirm("本当にに削除しますか？");
+        if (del == true) {
+          // deletedb(id, pass, token);
+          this.submit();
+        }
+      }
+    });
+  });
+});
+
+function validateName(field) {
     return (field == '') ? '名前が入力されていません。\n' : ''
   }
-  function validateBody(field) {
-    return (field == '') ? '本文が入力されていません。\n' : ''
-  }
-  function validatePass(field) {
-    if (field == '') return '削除パスワードが設定されていません。\n'
-    if (field.length != 4)
+function validateBody(field) {
+  return (field == '') ? '本文が入力されていません。\n' : ''
+}
+function validatePass(field) {
+  if (field == '') return '削除パスワードが設定されていません。\n'
+  if (field.length != 4)
     return '削除パスワードが4文字になっていません。\n'
   else {
     const regex = new RegExp('^[0-9]{4}$');
@@ -210,28 +234,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 }
 
-const formTags = document.querySelectorAll('.delete');
-formTags.forEach(function (item, index) {
-    item.onsubmit = function (event) {
-      event.preventDefault();
-      const id = this.id.value;
-      const pass = this.pass.value;
-      const token = this.token.value;
-      // console.log(id, pass);
-
-      fail = validatePass(pass);
-      if (fail != '') {
-        alert(fail);
-      }
-      else {
-        const del = confirm("本当にに削除しますか？");
-        if (del == true) {
-          deletedb(id, pass, token);
-        }
-      }
-    }
-  });
-});
 
 function deletedb(id, pass, token) {
 
