@@ -212,101 +212,54 @@ document.addEventListener('DOMContentLoaded', function() {
 
 const formTags = document.querySelectorAll('.delete');
 formTags.forEach(function (item, index) {
-      item.onsubmit = function (event) {
-        event.preventDefault();
-        const id = this.id.value;
-        const pass = this.pass.value;
-        const token = this.token.value;
-        // console.log(id, pass);
+    item.onsubmit = function (event) {
+      event.preventDefault();
+      const id = this.id.value;
+      const pass = this.pass.value;
+      const token = this.token.value;
+      // console.log(id, pass);
 
-        fail = validatePass(pass);
-        if (fail != '') {
-          alert(fail);
-        }
-        else {
-          const del = confirm("本当にに削除しますか？");
-          if (del == true) {
-            deletedb(id, pass, token);
-          }
+      fail = validatePass(pass);
+      if (fail != '') {
+        alert(fail);
+      }
+      else {
+        const del = confirm("本当にに削除しますか？");
+        if (del == true) {
+          deletedb(id, pass, token);
         }
       }
+    }
   });
 });
 
-
-// $(function(){
-//   $('.delete').submit(function(e) {
-//     e.preventDefault();
-
-//     const id = this.id.value;
-//     const pass = this.pass.value;
-//     const token = this.token.value;
-//     // console.log(id, pass);
-
-//     fail = validatePass(pass);
-//     if (fail != '') {
-//       alert(fail);
-//     }
-//     else {
-//       const del = confirm("本当にに削除しますか？");
-//       if (del == true) {
-//         deletedb(id, pass, token);
-//       }
-//     }
-//   });
-// });
-
-
-// $(function(){
-//   $('.delete').on('click', function() {
-//     const id = this.parentNode.id.value;
-//     const pass = this.parentNode.pass.value;
-//     const token = this.parentNode.token.value;
-//     // console.log(id, pass);
-
-//     fail = validatePass(pass);
-//     if (fail != '') {
-//       alert(fail);
-//     }
-//     else {
-//       const del = confirm("本当にに削除しますか？");
-//       if (del == true) {
-//         deletedb(id, pass, token);
-//       }
-//     }
-//   });
-// });
-
-
-
-
-
 function deletedb(id, pass, token) {
 
-  var data = {
-      // name: 'John',
-      // age: 25
+  fetch('delete.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: new URLSearchParams({
       id: id,
       pass: pass,
       token: token
-    };
-
-  $.post('delete.php', 
-        {
-          id: id,
-          pass: pass,
-          token: token
-        },
-        function (response) {
-          // レスポンスの処理
-          // console.log(response);
-          if (response != '') {
-            alert(response);
-          } else {
-            window.location.reload();
-          }
-        }
-  );
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+      if (data.error) {
+        alert(data.error);
+      } else {
+        window.location.reload();
+        alert('削除に成功しました。');
+      }
+  })
+  .catch(error => {
+      var message = document.getElementById('message');
+      message.textContent = 'サーバーエラーが発生しました。';
+      console.error('Error:', error);
+  });
 }
 
 

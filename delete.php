@@ -39,9 +39,11 @@
     $stmt->execute();
 
     if ($stmt-> rowCount() > 0) {
-      echo '';
+      // 削除成功
+      echo json_encode(['error' => '']);
     } else {
-      echo '削除できませんでした';
+      // 削除失敗
+      echo json_encode(['error' => 'パスワードが間違っています。']);
     }
     exit();
 
