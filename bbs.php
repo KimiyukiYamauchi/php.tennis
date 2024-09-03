@@ -207,8 +207,8 @@ document.addEventListener('DOMContentLoaded', function() {
       else {
         const del = confirm("本当にに削除しますか？");
         if (del == true) {
-          // deletedb(id, pass, token);
-          this.submit();
+          deletedb(id, pass, token);
+          // this.submit();
         }
       }
     });
@@ -263,8 +263,6 @@ function deletedb(id, pass, token) {
       console.error('Error:', error);
   });
 }
-
-
 </script>
 </body>
 </html>

@@ -12,13 +12,15 @@
 
   // CSRF対策：トークンが正しいか？
   if ($token != hash('sha256', session_id())) {
-    echo '削除できませんでした';
+    // echo '削除できませんでした';
+    echo json_encode(['error' => 'トークンが間違っています。']);
     exit();
   }
 
   // 必須項目チェック
   if ($id == '' || $pass == '') {
-    echo '削除できませんでした';
+    // echo '削除できませんでした';
+    echo json_encode(['error' => '削除できませんでした']);
     exit();
   }
 
